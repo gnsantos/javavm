@@ -1,20 +1,14 @@
 public class MatrixHexa {
-    
-    private String hello;
-    
-    private Terrain[] array;
+        
+    private Terrain[] terrains;
     
     public MatrixHexa () {
-        array = new Terrain[10];
+        terrains = new Terrain[10];
         
         for (int i = 0; i < 10; i++) {
-            array[i] = new Terrain();
+            terrains[i] = new Terrain();
         }
         
-    }
-    
-    public String hello () {
-        return this.hello;
     }
     
 }
