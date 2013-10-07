@@ -1,13 +1,13 @@
 public class Terrain {
     
-    private int index;
+    private char character;
     
-    public Terrain (int index) {
-        this.index = index;
+    public Terrain (char character) {
+        this.character = character;
     }
     
-    public int index() {
-        return this.index;
+    public char character() {
+        return this.character;
     }
     
 }

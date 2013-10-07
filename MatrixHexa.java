@@ -7,28 +7,29 @@ public class MatrixHexa {
     
     private Point size;
     
-    public MatrixHexa () {
+    public MatrixHexa (char[][] map) {
         
         Random gen = new Random();
         
-        size = new Point(10, 10);
+        size = new Point(map.length, map[0].length);
         
         terrains = new Terrain[size.x][size.y];
         
         for (int i = 0; i < size.x; i++) {
             for (int j = 0; j < size.y; j++) {
-                terrains[i][j] = new Terrain(gen.nextInt(26));
+                char a = map[i][j];
+                terrains[i][j] = new Terrain(a);
             }
         }
         
     }
     
-    Point size() {
+    public Point size() {
         return size;
     }
     
-    int terrainIndex(int x, int y) {
-        return terrains[x][y].index();
+    public char terrainChar(int x, int y) {
+        return terrains[x][y].character();
     }
     
 }
