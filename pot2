@@ -1,0 +1,19 @@
+# inicializa
+PUSH 1
+STO 0 #x
+PUSH 10000000
+STO 1 #y
+
+LOOP: POP 
+RCL 0
+DUP
+ADD
+STO 0
+RCL 0
+PRN
+RCL 0
+RCL 1
+LT
+JIF	LOOP
+
+END
