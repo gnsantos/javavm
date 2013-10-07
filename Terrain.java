@@ -2,8 +2,8 @@ public class Terrain {
     
     private int index;
     
-    public Terrain () {
-        this.index = 12456;
+    public Terrain (int index) {
+        this.index = index;
     }
     
     public int index() {
