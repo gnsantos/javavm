@@ -1,5 +1,4 @@
 import java.awt.Point;
-import java.util.Random;
 
 public class MatrixHexa {
     
@@ -8,8 +7,6 @@ public class MatrixHexa {
     private Point size;
     
     public MatrixHexa (char[][] map) {
-        
-        Random gen = new Random();
         
         size = new Point(map.length, map[0].length);
         
