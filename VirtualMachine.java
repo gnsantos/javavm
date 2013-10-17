@@ -6,71 +6,134 @@ import java.util.regex.Pattern;
 
 class VirtualMachine{
   
-  LinkedList<String[]> programArray = new LinkedList<String[]>(); /*Lista ligada (com Random Acess) que guarda instruções. Vetor-programa.*/
-  Hashtable<String, Integer> labelsHash = new Hashtable<String, Integer>();
-  
+  private LinkedList<String[]> programArray = new LinkedList<String[]>(); /*Lista ligada (com Random Acess) que guarda instrues. Vetor-programa.*/
+  private Hashtable<String, Integer> labelsHash = new Hashtable<String, Integer>();
+  private static Parser filter;
+  private StackElement myStack = new StackElement();
+  private int pc;
+  private enum Set{
+    ADD, SUB, MUL, DIV, EQ, GT, GE, NE, LT, LE, JIT, JIF, RCL, STO, PUSH, POP, DUP, PRN, END
+  }
 //   Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
   
-  void interpretSource(BufferedReader file) throws IOException{ /*Lê o código e constroi o vetor de instruções.*/
-    String line;
-    int pc = 0;
-    Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
-    Pattern labeline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)[\n\f#]*$");
-    Pattern other = Pattern.compile("(^#.*[\n\f]*)");
-    
-    while((line = file.readLine()) != null && !line.equals("\n") && !line.equals("")){
-      Matcher matchLabel = labeline.matcher(line);
-      Matcher matchComLine = comline.matcher(line);
-      Matcher matchOther = other.matcher(line);
-      String label;
-      
-      if(matchOther.find()){
-        System.out.println("foo");
-      }
-      else if(matchLabel.find()){
-        label = matchLabel.group(1).substring(0, matchLabel.group(1).length()-1);
-        labelsHash.put(label, pc);
-        pc++;
-        System.out.println(label);
-      }
-      
-      else if(matchComLine.find()){
-        String opcode = "", arg="";
-        if(matchComLine.group(1) != null){
-          label = matchComLine.group(1).substring(0, matchComLine.group(1).length()-1);
-          labelsHash.put(label, pc);
-        }
-        if(matchComLine.group(2) != null){
-          opcode =  matchComLine.group(2);
-          System.out.println(opcode);
-        }
-        if(matchComLine.group(3) != null && !matchComLine.group(3).equals("")){
-          arg = matchComLine.group(3);
-        }
-        pc++;
-        String [] comando = {opcode,arg};
-        programArray.add(comando);
-      }
-      
-      else{System.out.print(line+": ");System.out.println("Syntax Error.");}
-      
-    }
+  private LinkedList<String[]> program(){
+    return this.programArray;
   }
-  
+
+  private Hashtable<String, Integer> hashlables(){
+    return this.labelsHash;
+  }
+
   void showProgram(){
    for(int i = 0; i < programArray.size(); i++)
-     System.out.println(programArray.get(i)[0]);
+     System.out.println(programArray.get(i)[0]+" "+programArray.get(i)[1]);
   }
-  
+
+  void showHash(){
+    Enumeration<String> enumKey = labelsHash.keys();
+    while(enumKey.hasMoreElements()) {
+      String key = enumKey.nextElement();
+      Integer val = labelsHash.get(key);
+      System.out.println(key+" "+val);
+    }
+  }
+
+  private void makeOperation(int index){
+    String opCode = programArray.get(index)[0];
+    Set myOperation = Set.valueOf(opCode);
+   // System.out.println("Valor e : " + myOperation);
+
+    switch (myOperation) {
+        case ADD:
+          System.out.println("Isso e um ADD");
+          break;
+        case SUB:
+          System.out.println("Isso e um SUB");
+          break;
+        case MUL:
+          System.out.println("Isso e um MUL");
+          break;
+        case DIV:
+          System.out.println("Isso e um ADD");
+          break;
+        case EQ:
+          System.out.println("Isso e um SUB");
+          break;
+        case GT:
+          System.out.println("Isso e um MUL");
+          break;
+        case GE:
+          System.out.println("Isso e um ADD");
+          break;
+        case NE:
+          System.out.println("Isso e um SUB");
+          break;
+        case LT:
+          System.out.println("Isso e um MUL");
+          break;
+        case LE:
+          System.out.println("Isso e um ADD");
+          break;
+        case JIT:
+          System.out.println("Isso e um SUB");
+          break;
+        case JIF:
+          System.out.println("Isso e um MUL");
+          break;
+        case RCL:
+          System.out.println("Isso e um ADD");
+          break;
+        case STO:
+          System.out.println("Isso e um SUB");
+          break;
+        case PUSH:
+          System.out.println("Isso e um MUL");
+          break;
+        case POP:
+          System.out.println("Isso e um ADD");
+          break;
+        case DUP:
+          System.out.println("Isso e um SUB");
+          break;
+        case PRN:
+          System.out.println("Isso e um MUL");
+          break;
+        case END:
+          System.out.println("Isso e um ADD");
+          break;
+        case SYSCALL1:
+          System.out.println("Isso e um SUB");
+          break;
+        case SYSCALL2:
+          System.out.println("Isso e um MUL");
+          break;
+        default:
+          System.out.println("QUI BURRO! DA ZERO PRA ELE!");
+          break;
+
+    }
+  }
+
+  private void setPC(int value){
+    this.pc = value;
+  }
+  private int getPC(){
+    return this.pc;
+  }
+
+  void runCode(){
+    for(setPC(0); getPC() < programArray.size(); setPC(getPC() +1 )){
+      makeOperation(getPC());
+    }
+  }
+
   public static void main(String[] argv) throws IOException{
-    BufferedReader file; /*Objeto que permite leitura do arquivo contendo o código que a máquina deve executar*/
     VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
-    Scanner sc = new Scanner(System.in); 
-    System.out.print("Entre o nome do codigo-fonte: ");
-    String name = sc.nextLine();
-    file = new BufferedReader(new FileReader(name));
-    vm.interpretSource(file);
+    String name = argv[0];
+    filter.parseToMe(vm.program(), vm.hashlables(), name);
     vm.showProgram();
+    vm.showHash();
+    vm.runCode();
   }
   
 }
