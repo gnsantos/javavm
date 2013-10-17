@@ -10,13 +10,6 @@ public class Stackable_Number implements StackableInterface{
 	public double getValue(){
 		return this.myValue;
 	}
-	public void teste1(){
-		System.out.println("Teste da classe Stackable_Number::teste1" +"\n" + "Valor : " + this.myValue);
-	}
-	public void waka(){
-		System.out.println("Teste da classe Stackable_Number::waka");
-	}
-
 	public void printYourself(){
 		System.out.println("My Value is : " + this.myValue);
 	}
