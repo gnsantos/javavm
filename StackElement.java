@@ -34,6 +34,7 @@ public class StackElement{
 		return (foo.getValue() == 0);
 	}
 
+
 	//Duplica o topo
 	public void dupTop(){
 		StackableInterface top = stackTeste.get(stackSize()-1);
@@ -47,7 +48,9 @@ public class StackElement{
 
 	public void printTop(){
 		StackableInterface foo = pop();
+		System.out.println("##################");
 		foo.printYourself();
+		System.out.println("##################");
 	}
 
 /*
@@ -56,7 +59,9 @@ Pilha
 	//Imprime a pilha
 	public void printStack(){
 		for (int x = 0; x < stackTeste.size() ; x++) {
+			System.out.println("-----------");
 			stackTeste.get(x).printYourself();
+			System.out.println("-----------");
 		}
 		if(stackTeste.size() == 0){
 			System.out.println("Empty Stack!");
@@ -116,6 +121,7 @@ Memória
 				break;
 			case 4:
 				foo = myOperation.equal(pop(),pop());
+				System.out.println("Entrei aqui!");
 				break;
 			case 5:
 				foo = myOperation.greatThan(pop(),pop());
@@ -124,13 +130,13 @@ Memória
 				foo = myOperation.greatEqual(pop(),pop());
 				break;
 			case 7:
-				foo = myOperation.notEqual(pop(),pop());
-				break;
-			case 8:
 				foo = myOperation.lessThan(pop(),pop());
 				break;
-			case 9:
+			case 8:
 				foo = myOperation.lessEqual(pop(),pop());
+				break;
+			case 9:
+				foo = myOperation.notEqual(pop(),pop());
 				break;
 			case 10:
 				foo = myOperation.itsTrue(pop());
@@ -139,7 +145,8 @@ Memória
 				foo = myOperation.itsFalse(pop());
 				break;
 			default:
-				foo = new Stackable_Number(-1);
+				foo = null;
+				break;
 		}
 		pile(foo.getValue());
 	}

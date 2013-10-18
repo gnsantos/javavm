@@ -11,8 +11,28 @@ class VirtualMachine{
   private static Parser filter;
   private StackElement myStack = new StackElement();
   private int pc;
-  private enum Set{
-    ADD, SUB, MUL, DIV, EQ, GT, GE, NE, LT, LE, JIT, JIF, RCL, STO, PUSH, POP, DUP, PRN, END
+  private enum Set{ 
+    PUSH, 
+    POP, 
+    DUP, 
+    PRN,
+    SHW,
+    RCL,
+    STO,
+    END,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    EQ,
+    GT,
+    GE,
+    LT,
+    LE,
+    NE,
+    JIT,
+    JIF,
+    JMP
   }
 //   Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
   
@@ -39,78 +59,112 @@ class VirtualMachine{
   }
 
   private void makeOperation(int index){
+    boolean decision;
     String opCode = programArray.get(index)[0];
+    //System.out.println("Command : " + opCode);
     Set myOperation = Set.valueOf(opCode);
    // System.out.println("Valor e : " + myOperation);
 
     switch (myOperation) {
-        case ADD:
-          System.out.println("Isso e um ADD");
-          break;
-        case SUB:
-          System.out.println("Isso e um SUB");
-          break;
-        case MUL:
-          System.out.println("Isso e um MUL");
-          break;
-        case DIV:
-          System.out.println("Isso e um ADD");
-          break;
-        case EQ:
-          System.out.println("Isso e um SUB");
-          break;
-        case GT:
-          System.out.println("Isso e um MUL");
-          break;
-        case GE:
-          System.out.println("Isso e um ADD");
-          break;
-        case NE:
-          System.out.println("Isso e um SUB");
-          break;
-        case LT:
-          System.out.println("Isso e um MUL");
-          break;
-        case LE:
-          System.out.println("Isso e um ADD");
-          break;
-        case JIT:
-          System.out.println("Isso e um SUB");
-          break;
-        case JIF:
-          System.out.println("Isso e um MUL");
-          break;
-        case RCL:
-          System.out.println("Isso e um ADD");
-          break;
-        case STO:
-          System.out.println("Isso e um SUB");
-          break;
         case PUSH:
-          System.out.println("Isso e um MUL");
+          try{
+            myStack.pile(Double.parseDouble(programArray.get(index)[1]));
+
+          }catch(NumberFormatException e1){
+            myStack.pile(programArray.get(index)[1]);
+          }
           break;
         case POP:
-          System.out.println("Isso e um ADD");
+          //System.out.println("Isso e um POP");
+          myStack.discartTop();
           break;
         case DUP:
-          System.out.println("Isso e um SUB");
+          //System.out.println("Isso e um DUP");
+          myStack.dupTop();
           break;
         case PRN:
-          System.out.println("Isso e um MUL");
+          //System.out.println("Isso e um PRN");
+          myStack.printTop();
+          break;
+        case SHW:
+          myStack.printStack();
+          break;
+        case RCL:
+        try{
+          myStack.retriveMem(Integer.parseInt(programArray.get(index)[1]));
+        }catch(NumberFormatException e1){
+          System.out.println("Ocorreu um Erro na RCL Operation");
+        }
+          break;
+        case STO:
+          try{
+            myStack.salveMem(Integer.parseInt(programArray.get(index)[1]));
+          }catch(NumberFormatException e1){
+            System.out.println("Ocorreu um Erro na STO Operation");
+          }
           break;
         case END:
-          System.out.println("Isso e um ADD");
+          this.pc = programArray.size() +1;
           break;
-        case SYSCALL1:
-          System.out.println("Isso e um SUB");
+        case ADD:
+          myStack.operation(0);
           break;
-        case SYSCALL2:
-          System.out.println("Isso e um MUL");
+        case SUB:
+          myStack.operation(1);
+          break;
+        case MUL:
+          myStack.operation(2);
+          break;
+        case DIV:
+          myStack.operation(3);
+          break;
+        case EQ:
+          myStack.operation(4);
+          break;
+        case GT:
+          myStack.operation(5);
+          break;
+        case GE:
+          myStack.operation(6);
+          break;
+        case LT:
+          myStack.operation(7);
+          break;
+        case LE:
+          myStack.operation(8);
+          break;
+        case NE:
+          myStack.operation(9);
+          break;
+        case JIT:
+          myStack.operation(10);
+          decision = myStack.jumpTrue();
+          if(decision){
+            jumpPC(index);
+          }
+          break;
+        case JIF:
+          myStack.operation(11);
+          decision = myStack.jumpFalse();
+          if(!decision){
+            jumpPC(index);
+          }
+          break;
+        case JMP:
+          jumpPC(index);
           break;
         default:
-          System.out.println("QUI BURRO! DA ZERO PRA ELE!");
+          System.out.println("XX");
           break;
+    }
+  }
 
+  private void jumpPC(int position){
+    try{
+      this.pc = Integer.parseInt(programArray.get(position)[1]);
+      //jump to a exactly vector instruction position. 
+    }catch(NumberFormatException e1){
+      this.pc = labelsHash.get(programArray.get(position)[1]);
     }
   }
 
@@ -131,7 +185,7 @@ class VirtualMachine{
     VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
     String name = argv[0];
     filter.parseToMe(vm.program(), vm.hashlables(), name);
-    vm.showProgram();
+    //vm.showProgram();
     vm.showHash();
     vm.runCode();
   }
