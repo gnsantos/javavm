@@ -6,71 +6,188 @@ import java.util.regex.Pattern;
 
 class VirtualMachine{
   
-  LinkedList<String[]> programArray = new LinkedList<String[]>(); /*Lista ligada (com Random Acess) que guarda instruções. Vetor-programa.*/
-  Hashtable<String, Integer> labelsHash = new Hashtable<String, Integer>();
-  
+  private LinkedList<String[]> programArray = new LinkedList<String[]>(); /*Lista ligada (com Random Acess) que guarda instrues. Vetor-programa.*/
+  private Hashtable<String, Integer> labelsHash = new Hashtable<String, Integer>();
+  private static Parser filter;
+  private StackElement myStack = new StackElement();
+  private int pc;
+  private enum Set{ 
+    PUSH, 
+    POP, 
+    DUP, 
+    PRN,
+    SHW,
+    RCL,
+    STO,
+    END,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    EQ,
+    GT,
+    GE,
+    LT,
+    LE,
+    NE,
+    JIT,
+    JIF,
+    JMP
+  }
 //   Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
   
-  void interpretSource(BufferedReader file) throws IOException{ /*Lê o código e constroi o vetor de instruções.*/
-    String line;
-    int pc = 0;
-    Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
-    Pattern labeline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)[\n\f#]*$");
-    Pattern other = Pattern.compile("(^#.*[\n\f]*)");
-    
-    while((line = file.readLine()) != null && !line.equals("\n") && !line.equals("")){
-      Matcher matchLabel = labeline.matcher(line);
-      Matcher matchComLine = comline.matcher(line);
-      Matcher matchOther = other.matcher(line);
-      String label;
-      
-      if(matchOther.find()){
-        System.out.println("foo");
-      }
-      else if(matchLabel.find()){
-        label = matchLabel.group(1).substring(0, matchLabel.group(1).length()-1);
-        labelsHash.put(label, pc);
-        pc++;
-        System.out.println(label);
-      }
-      
-      else if(matchComLine.find()){
-        String opcode = "", arg="";
-        if(matchComLine.group(1) != null){
-          label = matchComLine.group(1).substring(0, matchComLine.group(1).length()-1);
-          labelsHash.put(label, pc);
-        }
-        if(matchComLine.group(2) != null){
-          opcode =  matchComLine.group(2);
-          System.out.println(opcode);
-        }
-        if(matchComLine.group(3) != null && !matchComLine.group(3).equals("")){
-          arg = matchComLine.group(3);
-        }
-        pc++;
-        String [] comando = {opcode,arg};
-        programArray.add(comando);
-      }
-      
-      else{System.out.print(line+": ");System.out.println("Syntax Error.");}
-      
-    }
+  private LinkedList<String[]> program(){
+    return this.programArray;
   }
-  
+
+  private Hashtable<String, Integer> hashlables(){
+    return this.labelsHash;
+  }
+
   void showProgram(){
    for(int i = 0; i < programArray.size(); i++)
-     System.out.println(programArray.get(i)[0]);
+     System.out.println(programArray.get(i)[0]+" "+programArray.get(i)[1]);
   }
-  
+
+  void showHash(){
+    Enumeration<String> enumKey = labelsHash.keys();
+    while(enumKey.hasMoreElements()) {
+      String key = enumKey.nextElement();
+      Integer val = labelsHash.get(key);
+      System.out.println(key+" "+val);
+    }
+  }
+
+  private void makeOperation(int index){
+    boolean decision;
+    String opCode = programArray.get(index)[0];
+    //System.out.println("Command : " + opCode);
+    Set myOperation = Set.valueOf(opCode);
+   // System.out.println("Valor e : " + myOperation);
+
+    switch (myOperation) {
+        case PUSH:
+          try{
+            myStack.pile(Double.parseDouble(programArray.get(index)[1]));
+
+          }catch(NumberFormatException e1){
+            myStack.pile(programArray.get(index)[1]);
+          }
+          break;
+        case POP:
+          //System.out.println("Isso e um POP");
+          myStack.discartTop();
+          break;
+        case DUP:
+          //System.out.println("Isso e um DUP");
+          myStack.dupTop();
+          break;
+        case PRN:
+          //System.out.println("Isso e um PRN");
+          myStack.printTop();
+          break;
+        case SHW:
+          myStack.printStack();
+          break;
+        case RCL:
+        try{
+          myStack.retriveMem(Integer.parseInt(programArray.get(index)[1]));
+        }catch(NumberFormatException e1){
+          System.out.println("Ocorreu um Erro na RCL Operation");
+        }
+          break;
+        case STO:
+          try{
+            myStack.salveMem(Integer.parseInt(programArray.get(index)[1]));
+          }catch(NumberFormatException e1){
+            System.out.println("Ocorreu um Erro na STO Operation");
+          }
+          break;
+        case END:
+          this.pc = programArray.size() +1;
+          break;
+        case ADD:
+          myStack.operation(0);
+          break;
+        case SUB:
+          myStack.operation(1);
+          break;
+        case MUL:
+          myStack.operation(2);
+          break;
+        case DIV:
+          myStack.operation(3);
+          break;
+        case EQ:
+          myStack.operation(4);
+          break;
+        case GT:
+          myStack.operation(5);
+          break;
+        case GE:
+          myStack.operation(6);
+          break;
+        case LT:
+          myStack.operation(7);
+          break;
+        case LE:
+          myStack.operation(8);
+          break;
+        case NE:
+          myStack.operation(9);
+          break;
+        case JIT:
+          myStack.operation(10);
+          decision = myStack.jumpTrue();
+          if(decision){
+            jumpPC(index);
+          }
+          break;
+        case JIF:
+          myStack.operation(11);
+          decision = myStack.jumpFalse();
+          if(!decision){
+            jumpPC(index);
+          }
+          break;
+        case JMP:
+          jumpPC(index);
+          break;
+        default:
+          System.out.println("XX");
+          break;
+    }
+  }
+
+  private void jumpPC(int position){
+    try{
+      this.pc = Integer.parseInt(programArray.get(position)[1]);
+      //jump to a exactly vector instruction position. 
+    }catch(NumberFormatException e1){
+      this.pc = labelsHash.get(programArray.get(position)[1]);
+    }
+  }
+
+  private void setPC(int value){
+    this.pc = value;
+  }
+  private int getPC(){
+    return this.pc;
+  }
+
+  void runCode(){
+    for(setPC(0); getPC() < programArray.size(); setPC(getPC() +1 )){
+      makeOperation(getPC());
+    }
+  }
+
   public static void main(String[] argv) throws IOException{
-    BufferedReader file; /*Objeto que permite leitura do arquivo contendo o código que a máquina deve executar*/
     VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
-    Scanner sc = new Scanner(System.in); 
-    System.out.print("Entre o nome do codigo-fonte: ");
-    String name = sc.nextLine();
-    file = new BufferedReader(new FileReader(name));
-    vm.interpretSource(file);
-    vm.showProgram();
+    String name = argv[0];
+    filter.parseToMe(vm.program(), vm.hashlables(), name);
+    //vm.showProgram();
+    vm.showHash();
+    vm.runCode();
   }
   
 }
