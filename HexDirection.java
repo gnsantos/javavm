@@ -1,10 +1,10 @@
 public enum HexDirection {
-    LEFT (-1, 0),
-    RIGHT (1, 0),
-    UPLEFT (-1, -1),
-    UPRIGHT (0, -1),
-    DOWNLEFT (-1, 1),
-    DOWNRIGHT (0, 1);
+    UP (-1, 0),
+    DOWN (1, 0),
+    LEFTDOWN (1, -1),
+    LEFTUP (0, -1),
+    RIGHTDOWN (1, 1),
+    RIGHTUP (0, 1);
 
     private final int x;
     private final int y;
@@ -14,11 +14,11 @@ public enum HexDirection {
         this.y = y;
     }
 
-public int x() {
-return this.x;
-}
+    public int x() {
+        return this.x;
+    }
 
-public int y() {
-return this.y;
-}
+    public int y() {
+        return this.y;
+    }
 }
