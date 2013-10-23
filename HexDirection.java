@@ -6,6 +6,8 @@ public enum HexDirection {
     RIGHTDOWN (1, 1),
     RIGHTUP (0, 1);
 
+//  As direções estão melhor descritas (desenhadas) no png disponível no git
+
     private final int x;
     private final int y;
 
