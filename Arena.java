@@ -8,7 +8,12 @@ public class Arena {
     private static final char ROBOT = 'r';
     private static final char EMPTY = ' ';
     
-    private static final char BOUNDS = '^';
+    private static final char W = '/';
+    private static final char T = '^';
+    private static final char E = ' ';
+    private static final char B = '@';
+    
+    private static final char BOUNDS = T;
     
     private static final int NUM_ROBOTS = 16;
     private static final int NUM_CRYSTALS = 10;
@@ -27,16 +32,16 @@ public class Arena {
         
 //        Só dimensões pares no mapa!
         char[][] map = {
-            {'^', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', '@', '^'},
-            {'^', ' ', '/', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', ' ', '^'},
-            {'^', ' ', '^', '/', '/', '^', '^', '^', '^', '^', '^', '^', ' ', ' ', ' ', '^'},
-            {'^', ' ', '^', '^', '^', '/', '/', '^', '^', '^', ' ', ' ', '^', '^', ' ', '^'},
-            {'^', ' ', '^', '^', '^', '^', '^', '/', ' ', ' ', '^', '^', '^', '^', ' ', '^'},
-            {'^', ' ', '^', '^', '^', '^', ' ', ' ', '^', '/', '/', '^', '^', '^', ' ', '^'},
-            {'^', ' ', '^', '^', ' ', ' ', '^', '^', '^', '^', '^', '/', '/', '^', ' ', '^'},
-            {'^', ' ', ' ', ' ', '^', '^', '^', '^', '^', '^', '^', '^', '^', '/', ' ', '^'},
-            {'^', ' ', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^'},
-            {'^', '@', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', ' ', '^', '^'}
+            {T, T, E, T, E, T, E, T, E, T, E, T, E, T, B, T},
+            {T, E, W, E, T, E, T, E, T, E, T, E, T, E, E, T},
+            {T, E, T, W, W, T, T, T, T, T, T, T, E, E, E, T},
+            {T, E, T, T, T, W, W, T, T, T, E, E, T, T, E, T},
+            {T, E, T, T, T, T, T, W, E, E, T, T, T, T, E, T},
+            {T, E, T, T, T, T, E, E, T, W, W, T, T, T, E, T},
+            {T, E, T, T, E, E, T, T, T, T, T, W, W, T, E, T},
+            {T, E, E, E, T, T, T, T, T, T, T, T, T, W, E, T},
+            {T, E, E, T, E, T, E, T, E, T, E, T, E, T, E, T},
+            {T, B, T, E, T, E, T, E, T, E, T, E, T, E, T, T}
         };
         
         matrix = new MatrixHexa(map);
@@ -191,12 +196,11 @@ public class Arena {
                         x = i*4;
                         if (j%2 == 0) x += 2;
                         
-                        screen[x + 1][y + 4] = '0';
-                        screen[x + 2][y + 3] = '/';
-                        screen[x + 2][y + 4] = 'H';
-                        screen[x + 2][y + 5] = '\\';
-                        screen[x + 3][y + 3] = '/';
-                        screen[x + 3][y + 5] = '\\';
+                        screen[x + 1][y + 4] = '◯';
+                        screen[x + 2][y + 3] = '▔';
+                        screen[x + 2][y + 4] = '█';
+                        screen[x + 2][y + 5] = '▔';
+                        screen[x + 3][y + 4] = '∆';
                     }
                 }
             }
@@ -235,9 +239,9 @@ public class Arena {
 }
 
 //          /     \
-//         /   0   \
-//   /^^^^^\  /H\  /
-//  /^^^^^^^\_/_\_/
+//         /   ◯   \
+//   /^^^^^\  ▔█▔  /
+//  /^^^^^^^\_ ∆ _/
 //  \^^^^^^^/     \
 //   \^^^^^/   0   \
 //   /     \  /H\  /
