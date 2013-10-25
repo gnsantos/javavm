@@ -174,10 +174,15 @@ class VirtualMachine{
   private int getPC(){
     return this.pc;
   }
+  private void nextPc(){
+    this.pc++;
+  }
 
   void runCode(){
-    for(setPC(0); getPC() < programArray.size(); setPC(getPC() +1 )){
+    for(setPC(0); getPC() < programArray.size();){
       makeOperation(getPC());
+      //System.out.println("Valor do pc = " + getPC());
+      nextPc();
     }
   }
 

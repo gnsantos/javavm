@@ -6,12 +6,15 @@ public class StackElement{
 	public ArrayList<StackableInterface> stackTeste = new ArrayList<StackableInterface>();
 	public MemoryArray memorySegment = new MemoryArray(MAX);
 	public Operation myOperation = new Operation();
-
 	//Empilha dois tipos de dado diferente
+	private boolean itsEmpty(){
+		return (stackTeste.size() == 0);
+	}
 	public void pile(double valor){
 		Stackable_Number val = new Stackable_Number(valor);
 		stackTeste.add(val);
 	}
+
 	public void pile(String texto){
 		Stackable_String val = new Stackable_String(texto);
 		stackTeste.add(val);
@@ -43,7 +46,10 @@ public class StackElement{
 	//Pop da pilha
 
 	public void discartTop(){
-		stackTeste.remove(stackSize() -1);
+		if (!itsEmpty()){
+			stackTeste.remove(stackSize() -1);
+		}
+		else{System.out.println("Stakc is Empty!");}
 	}
 
 	public void printTop(){
@@ -94,8 +100,10 @@ Memória
 	
 	//Remove da memória da posição fornecida e insere no topo da pilha.
 	public void retriveMem(int position){
+		printStack();
 		StackableInterface foo = memorySegment.get(position);
 		stackTeste.add(foo);
+		
 	}
 	//Imprime a posição solicitada da memoria
 	public void printMem(int pos){

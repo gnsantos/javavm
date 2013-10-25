@@ -1,7 +1,8 @@
-PUSH 10
+PUSH testando
+PUSH 777
+PUSH bbb
 PUSH 4
-ADD
-PUSH 3
-MUL
-PRN
+PUSH 4
+SHW
+JMP waka
 END
