@@ -31,6 +31,7 @@ public class Arena {
     public static void main(String[] args) {
         
 //        Só dimensões pares no mapa!
+//        Mapa é uma matriz de chars que contém as informações de como o mapa estará
         char[][] map = {
             {T, T, E, T, E, T, E, T, E, T, E, T, E, T, B, T},
             {T, E, W, E, T, E, T, E, T, E, T, E, T, E, E, T},
@@ -46,7 +47,9 @@ public class Arena {
         
         matrix = new MatrixHexa(map);
         
+        // Arena é uma matriz contendo as posições dos robôs e dos cristais
         initArena(map.length, map[0].length);
+        // Screen é uma matriz de chars que será diretamente impressa na tela
         initScreen(map.length, map[0].length, map);
         
         HexDirection dir = HexDirection.LEFT;
