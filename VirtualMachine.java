@@ -168,6 +168,8 @@ class VirtualMachine{
           case WLK:
             System.out.println("O robo anda!");
             System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            SystemRequest.makeRequest(opCode, "777");
+            //SystemRequest.foo();
             break;
           case BOMB:
             System.out.println("O robo coloca uma mina no chao");
