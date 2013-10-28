@@ -50,10 +50,9 @@ public class Battlefield{
     
     public static void main (String argv[]) throws IOException {
         matrix = new MatrixHexa(map);
-        DebugJav.sayCrash("Battlefield 53x");
+        codeName = argv[0];
         initArena(map.length, map[0].length);
         initScreen(map.length, map[0].length, map);
-        codeName = argv[0];
         //tellMeAboutTheWar();
         // printArena();
         runtheGame();
@@ -82,14 +81,14 @@ public class Battlefield{
     public static void systemCall(SystemRequest request){
         requestQueue.add(request);
     }
-	public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber){
+	public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber) throws IOException{
         DebugJav.sayCrash("86");
         army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber,codeName));
         army.get(index).setTeam("Team "+team);
         army.get(index).moveRobot(x,y);
 	}
 
-    static void initArena(int mapHeight, int mapWidth){
+    static void initArena(int mapHeight, int mapWidth) throws IOException{
         arena = new Entity[mapHeight][mapWidth];
         
         Random gen = new Random();

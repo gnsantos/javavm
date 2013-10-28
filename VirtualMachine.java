@@ -52,11 +52,11 @@ class VirtualMachine{
     RUNNING,
     CALLING
   }
-  public VirtualMachine(String sourceCode,int serialNumber){
-    filter.parseToMe(program(), hashlables(), sourceCode);
+  public VirtualMachine(String sourceCode,int serialNumber) throws IOException{
+    filter.parseToMe(this.programArray, this.labelsHash, sourceCode);
     this.instructionCounter = 0;
     this.pc = 0;
-    this.myState = MachineStates.valueOf("W");
+    this.myState = MachineStates.valueOf("WAITING");
     this.serialNumber = serialNumber;
   }
 
@@ -256,7 +256,8 @@ class VirtualMachine{
   }
 
   public int runCode(){
-    this.myState = MachineStates.valueOf("RUNING");
+    DebugJav.sayCrash("mmmm");
+    this.myState = MachineStates.valueOf("RUNNING");
     while(this.myState.toString().compareTo("RUNING") == 0){
       makeOperation(getPC());
       nextPc();

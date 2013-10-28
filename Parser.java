@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 public class Parser{
 	public static void parseToMe (LinkedList<String[]> programArray, Hashtable<String, Integer> labelsHash, String name) throws IOException{
+        DebugJav.sayCrash(name);
 		BufferedReader file = new BufferedReader(new FileReader(name));
 		String line;
 	    int pc = 0;

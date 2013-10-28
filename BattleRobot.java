@@ -1,5 +1,6 @@
 import java.lang.*;
 import java.util.*;
+import java.io.*;
 
 public class BattleRobot implements Robot{
 	//Robot Attributes
@@ -11,7 +12,7 @@ public class BattleRobot implements Robot{
 	private VirtualMachine vm;
 	private int robotState;
 
-	public BattleRobot(String name, int serialNumber, String sourceCode){
+	public BattleRobot(String name, int serialNumber, String sourceCode) throws IOException{
 		this.robotName = name;
 		this.serialNumber = serialNumber;
 		this.vm = new VirtualMachine(sourceCode, this.serialNumber);
