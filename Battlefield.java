@@ -29,7 +29,7 @@ public class Battlefield{
         
     static char[][] screen;
 
-	static char[][] map = {
+ static char[][] map = {
             {T, T, E, T, E, T, E, T, E, T, E, T, E, T, B, T},
             {T, E, W, E, T, E, T, E, T, E, T, E, T, E, E, T},
             {T, E, T, W, W, T, T, T, T, T, T, T, E, E, E, T},
@@ -41,12 +41,12 @@ public class Battlefield{
             {T, E, E, T, E, T, E, T, E, T, E, T, E, T, E, T},
             {T, B, T, E, T, E, T, E, T, E, T, E, T, E, T, T}
         };
-	//Virtual Machines Atributtes
+ //Virtual Machines Atributtes
     private static Vector<BattleRobot> army = new Vector<BattleRobot>(NUM_ROBOTS);
     private static int serialMachine;
     private static Queue<SystemRequest> requestQueue = new LinkedList<SystemRequest>();
     public static String codeName;
- 	
+  
     
     public static void main (String argv[]) throws IOException {
         matrix = new MatrixHexa(map);
@@ -56,7 +56,7 @@ public class Battlefield{
         //tellMeAboutTheWar();
         // printArena();
         runtheGame();
-	}
+ }
     public static void runtheGame(){
         while(army.get(0).runVM() ==  1){
             if(requestQueue.size() != 0 ){  requestQueue.poll().showRequest();    }
@@ -65,28 +65,28 @@ public class Battlefield{
 
 
     public static void tellMeAboutTheWar(){
-		for (int x = 0; x < NUM_ROBOTS ; x++) {
-        	System.out.println("Name : " + army.get(x).sayName() 
-				+"\nSerial Number : " +army.get(x).saySerialNumber());
-        	System.out.println("Team : " + army.get(x).getTeam());
-        	System.out.print("Position : ");
-        	army.get(x).showCoordinates();
-        	System.out.println();
-        	// if(army.get(x).positionScanner(4,8)){
-        	// 	System.out.println("Im HERE!");
-        	// }
-        	// else{System.out.println("NOT HERE!");}
-		}
-	}
+  for (int x = 0; x < NUM_ROBOTS ; x++) {
+         System.out.println("Name : " + army.get(x).sayName() 
+    +"\nSerial Number : " +army.get(x).saySerialNumber());
+         System.out.println("Team : " + army.get(x).getTeam());
+         System.out.print("Position : ");
+         army.get(x).showCoordinates();
+         System.out.println();
+         // if(army.get(x).positionScanner(4,8)){
+         //  System.out.println("Im HERE!");
+         // }
+         // else{System.out.println("NOT HERE!");}
+  }
+ }
     public static void systemCall(SystemRequest request){
         requestQueue.add(request);
     }
-	public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber) throws IOException{
+ public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber) throws IOException{
         DebugJav.sayCrash("86");
         army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber,codeName));
         army.get(index).setTeam("Team "+team);
         army.get(index).moveRobot(x,y);
-	}
+ }
 
     static void initArena(int mapHeight, int mapWidth) throws IOException{
         arena = new Entity[mapHeight][mapWidth];
@@ -110,10 +110,10 @@ public class Battlefield{
             j = gen.nextInt(mapWidth);
             arena[i][j] = new Entity(ROBOT, i, j);
             if (k < NUM_ROBOTS/2){
-            	insertArmy(k,"A","TX",i,j,gen.nextInt(1000));
+             insertArmy(k,"A","TX",i,j,gen.nextInt(1000));
             }
             else{
-				insertArmy(k,"B","ZT",i,j,gen.nextInt(1000));
+    insertArmy(k,"B","ZT",i,j,gen.nextInt(1000));
             }
             // System.out.println("Robo #"+k + "\n("+i+","+j+")");
             // System.out.println();
@@ -235,11 +235,11 @@ public class Battlefield{
                         x = i*4;
                         if (j%2 == 0) x += 2;
                         
-                        screen[x + 1][y + 4] = '◯';
-                        screen[x + 2][y + 3] = '▔';
-                        screen[x + 2][y + 4] = '█';
-                        screen[x + 2][y + 5] = '▔';
-                        screen[x + 3][y + 4] = '∆';
+                        //screen[x + 1][y + 4] = '◯';
+                        //screen[x + 2][y + 3] = '▔';
+                        //screen[x + 2][y + 4] = '█';
+                        //screen[x + 2][y + 5] = '▔';
+                        //screen[x + 3][y + 4] = '∆';
                     }
                 }
             }

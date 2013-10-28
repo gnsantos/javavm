@@ -258,12 +258,12 @@ class VirtualMachine{
   public int runCode(){
     DebugJav.sayCrash("mmmm");
     this.myState = MachineStates.valueOf("RUNNING");
-    while(this.myState.toString().compareTo("RUNING") == 0){
+    while(this.myState.toString().compareTo("RUNNING") == 0){
       makeOperation(getPC());
       nextPc();
       addInstructionCount();
       if(getInstructionCounter() == MAX_IC){
-        makeSysCall("None","None ");
+        makeSysCall("None","None");
       }
       if (programArray.get(getPC())[0].compareTo("END") == 0){return -1;}
     }
