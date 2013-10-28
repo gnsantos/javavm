@@ -52,11 +52,6 @@ public class Arena {
         // Screen é uma matriz de chars que será diretamente impressa na tela
         initScreen(map.length, map[0].length, map);
         
-        HexDirection dir = HexDirection.LEFT;
-        
-        if (dir.x() == -1) {
-        }
-        
         printArena();
         
     }
