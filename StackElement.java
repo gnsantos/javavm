@@ -49,14 +49,12 @@ public class StackElement{
 		if (!itsEmpty()){
 			stackTeste.remove(stackSize() -1);
 		}
-		else{System.out.println("Stakc is Empty!");}
+		//else{System.out.println("Stakc is Empty bt discart top!");}
 	}
 
 	public void printTop(){
 		StackableInterface foo = pop();
-		System.out.println("##################");
 		foo.printYourself();
-		System.out.println("##################");
 	}
 
 /*
@@ -64,6 +62,8 @@ Pilha
 */
 	//Imprime a pilha
 	public void printStack(){
+		//System.out.println("---------Stack Print---------------");
+
 		for (int x = 0; x < stackTeste.size() ; x++) {
 			System.out.println("-----------");
 			stackTeste.get(x).printYourself();
@@ -72,6 +72,8 @@ Pilha
 		if(stackTeste.size() == 0){
 			System.out.println("Empty Stack!");
 		}
+		//System.out.println("------------------------------$$");
+
 	}
 	//Retorna o tamnho da pilha
 	public int stackSize(){
@@ -100,10 +102,8 @@ Memória
 	
 	//Remove da memória da posição fornecida e insere no topo da pilha.
 	public void retriveMem(int position){
-		printStack();
 		StackableInterface foo = memorySegment.get(position);
 		stackTeste.add(foo);
-		
 	}
 	//Imprime a posição solicitada da memoria
 	public void printMem(int pos){
@@ -129,7 +129,6 @@ Memória
 				break;
 			case 4:
 				foo = myOperation.equal(pop(),pop());
-				System.out.println("Entrei aqui!");
 				break;
 			case 5:
 				foo = myOperation.greatThan(pop(),pop());

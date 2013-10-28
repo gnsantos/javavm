@@ -11,7 +11,15 @@ class VirtualMachine{
   private static Parser filter;
   private StackElement myStack = new StackElement();
   private int pc;
-  private enum Set{ 
+  private enum SysCallOperations{
+    WLK,
+    FIRE,
+    BOMB,
+    TAKE,
+    LOOK,
+    ASK
+  }
+  private enum SetOperation{ 
     PUSH, 
     POP, 
     DUP, 
@@ -34,8 +42,8 @@ class VirtualMachine{
     JIF,
     JMP
   }
-//   Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b[^:]?)(\\w*)\\s*[\n\f#]*");
-  
+
+
   private LinkedList<String[]> program(){
     return this.programArray;
   }
@@ -54,18 +62,16 @@ class VirtualMachine{
     while(enumKey.hasMoreElements()) {
       String key = enumKey.nextElement();
       Integer val = labelsHash.get(key);
-      System.out.println(key+" "+val);
+      System.out.println("Chave : "+key +"\nValor : " +val);
     }
   }
 
   private void makeOperation(int index){
     boolean decision;
     String opCode = programArray.get(index)[0];
-    //System.out.println("Command : " + opCode);
-    Set myOperation = Set.valueOf(opCode);
-   // System.out.println("Valor e : " + myOperation);
-
-    switch (myOperation) {
+    try{
+      SetOperation myOperation = SetOperation.valueOf(opCode);
+      switch (myOperation) {
         case PUSH:
           try{
             myStack.pile(Double.parseDouble(programArray.get(index)[1]));
@@ -75,27 +81,24 @@ class VirtualMachine{
           }
           break;
         case POP:
-          //System.out.println("Isso e um POP");
           myStack.discartTop();
           break;
         case DUP:
-          //System.out.println("Isso e um DUP");
           myStack.dupTop();
           break;
         case PRN:
-          //System.out.println("Isso e um PRN");
           myStack.printTop();
           break;
         case SHW:
           myStack.printStack();
           break;
         case RCL:
-        try{
-          myStack.retriveMem(Integer.parseInt(programArray.get(index)[1]));
-        }catch(NumberFormatException e1){
-          System.out.println("Ocorreu um Erro na RCL Operation");
-        }
-          break;
+          try{
+            myStack.retriveMem(Integer.parseInt(programArray.get(index)[1]));
+          }catch(NumberFormatException e1){
+            System.out.println("Ocorreu um Erro na RCL Operation");
+          }
+            break;
         case STO:
           try{
             myStack.salveMem(Integer.parseInt(programArray.get(index)[1]));
@@ -154,18 +157,54 @@ class VirtualMachine{
           jumpPC(index);
           break;
         default:
-          System.out.println("XX");
+          System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
           break;
-    }
+      }
+
+    }catch(IllegalArgumentException enumErro1){
+      try{
+        SysCallOperations mySysCall = SysCallOperations.valueOf(opCode);
+        switch(mySysCall){
+          case WLK:
+            System.out.println("O robo anda!");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            SystemRequest.makeRequest(opCode, "777");
+            //SystemRequest.foo();
+            break;
+          case BOMB:
+            System.out.println("O robo coloca uma mina no chao");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            break;
+          case FIRE:
+            System.out.println("O robo atira");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            break;
+          case TAKE:
+            System.out.println("O robo pega um item do chao");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            break;
+          case LOOK:
+            System.out.println("O robo usa o radar");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            break;
+          case ASK:
+            System.out.println("O robo Faz perguntas a area");
+            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            break;
+          default:
+            System.out.println("Deu merda mesmo!");
+            break;
+          }
+      }catch(IllegalArgumentException enumErro2){ 
+        System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1] +"\nIt isn't a Valid Option!");    
+        }
+      }
   }
 
   private void jumpPC(int position){
-    try{
-      this.pc = Integer.parseInt(programArray.get(position)[1]);
-      //jump to a exactly vector instruction position. 
-    }catch(NumberFormatException e1){
-      this.pc = labelsHash.get(programArray.get(position)[1]);
-    }
+    String key = programArray.get(position)[1] + ':';
+    Integer val = labelsHash.get(key);
+    this.pc = val -1;
   }
 
   private void setPC(int value){
@@ -181,7 +220,6 @@ class VirtualMachine{
   void runCode(){
     for(setPC(0); getPC() < programArray.size();){
       makeOperation(getPC());
-      //System.out.println("Valor do pc = " + getPC());
       nextPc();
     }
   }
@@ -190,8 +228,10 @@ class VirtualMachine{
     VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
     String name = argv[0];
     filter.parseToMe(vm.program(), vm.hashlables(), name);
-    //vm.showProgram();
-    vm.showHash();
+    // vm.showProgram();
+    // System.out.println("---------");
+    //vm.showHash();
+    // System.out.println("-----xxxxs----");
     vm.runCode();
   }
   
