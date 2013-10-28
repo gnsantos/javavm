@@ -2,6 +2,7 @@ import java.awt.Point;
 import java.util.Random;
 import java.lang.*;
 import java.util.*;
+import java.io.*;
 
 public class Battlefield{
 
@@ -17,7 +18,7 @@ public class Battlefield{
     
     private static final char BOUNDS = T;
     
-    private static final int NUM_ROBOTS = 8;
+    private static final int NUM_ROBOTS = 2;
     private static final int NUM_CRYSTALS = 10;
     
     
@@ -42,14 +43,29 @@ public class Battlefield{
         };
 	//Virtual Machines Atributtes
     private static Vector<BattleRobot> army = new Vector<BattleRobot>(NUM_ROBOTS);
-
- 	public static void main (String argv[]){
+    private static int serialMachine;
+    private static Queue<SystemRequest> requestQueue = new LinkedList<SystemRequest>();
+    public static String codeName;
+ 	
+    
+    public static void main (String argv[]) throws IOException {
         matrix = new MatrixHexa(map);
+        DebugJav.sayCrash("Battlefield 53");
         initArena(map.length, map[0].length);
         initScreen(map.length, map[0].length, map);
-        tellMeAboutTheWar();
+        codeName = argv[0];
+        //tellMeAboutTheWar();
+        // printArena();
+        runtheGame();
 	}
-	static void tellMeAboutTheWar(){
+    public static void runtheGame(){
+        while(army.get(0).runVM() ==  1){
+            if(requestQueue.size() != 0 ){  requestQueue.poll().showRequest();    }
+        }
+    }
+
+
+    public static void tellMeAboutTheWar(){
 		for (int x = 0; x < NUM_ROBOTS ; x++) {
         	System.out.println("Name : " + army.get(x).sayName() 
 				+"\nSerial Number : " +army.get(x).saySerialNumber());
@@ -63,13 +79,17 @@ public class Battlefield{
         	// else{System.out.println("NOT HERE!");}
 		}
 	}
-	static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber){
-        army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber));
+    public static void systemCall(SystemRequest request){
+        requestQueue.add(request);
+    }
+	public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber){
+        DebugJav.sayCrash("86");
+        army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber,codeName));
         army.get(index).setTeam("Team "+team);
         army.get(index).moveRobot(x,y);
 	}
 
-    static void initArena(int mapHeight, int mapWidth) {
+    static void initArena(int mapHeight, int mapWidth){
         arena = new Entity[mapHeight][mapWidth];
         
         Random gen = new Random();

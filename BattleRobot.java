@@ -6,13 +6,22 @@ public class BattleRobot implements Robot{
 	private String robotName;
 	private  String robotTeam;
 	private double robotHealth = 100.0;
-	public Vector<Integer> coordinates = new Vector<Integer>(2);
+	private Vector<Integer> coordinates = new Vector<Integer>(2);
 	private int serialNumber;
+	private VirtualMachine vm;
+	private int robotState;
 
-	public BattleRobot(String name, int serialNumber){
+	public BattleRobot(String name, int serialNumber, String sourceCode){
 		this.robotName = name;
 		this.serialNumber = serialNumber;
+		this.vm = new VirtualMachine(sourceCode, this.serialNumber);
+		this.robotState = 1;
 	}
+	public int runVM(){
+		if(this.vm.runCode() == -1){ return 0; }
+		else{ return 1; }
+	}
+
 	public String sayName(){
 		return this.robotName;
 	}

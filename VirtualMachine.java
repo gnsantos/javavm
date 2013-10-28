@@ -11,6 +11,11 @@ class VirtualMachine{
   private static Parser filter;
   private StackElement myStack = new StackElement();
   private int pc;
+  private int instructionCounter;
+  private MachineStates myState;
+  private static final int MAX_IC = 10;
+  private int serialNumber;
+
   private enum SysCallOperations{
     WLK,
     FIRE,
@@ -42,7 +47,18 @@ class VirtualMachine{
     JIF,
     JMP
   }
-
+  private enum MachineStates{
+    WAITING,
+    RUNNING,
+    CALLING
+  }
+  public VirtualMachine(String sourceCode,int serialNumber){
+    filter.parseToMe(program(), hashlables(), sourceCode);
+    this.instructionCounter = 0;
+    this.pc = 0;
+    this.myState = MachineStates.valueOf("W");
+    this.serialNumber = serialNumber;
+  }
 
   private LinkedList<String[]> program(){
     return this.programArray;
@@ -166,30 +182,36 @@ class VirtualMachine{
         SysCallOperations mySysCall = SysCallOperations.valueOf(opCode);
         switch(mySysCall){
           case WLK:
-            System.out.println("O robo anda!");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
-            SystemRequest.makeRequest(opCode, "777");
+            // System.out.println("O robo anda!");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // SystemRequest.makeRequest(opCode, "777");
             //SystemRequest.foo();
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           case BOMB:
-            System.out.println("O robo coloca uma mina no chao");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // System.out.println("O robo coloca uma mina no chao");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           case FIRE:
-            System.out.println("O robo atira");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // System.out.println("O robo atira");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           case TAKE:
-            System.out.println("O robo pega um item do chao");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // System.out.println("O robo pega um item do chao");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           case LOOK:
-            System.out.println("O robo usa o radar");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // System.out.println("O robo usa o radar");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           case ASK:
-            System.out.println("O robo Faz perguntas a area");
-            System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            // System.out.println("O robo Faz perguntas a area");
+            // System.out.println("Code : " +programArray.get(index)[0] +"\nArgs : "  +programArray.get(index)[1]);
+            makeSysCall(programArray.get(index)[0],programArray.get(index)[1]);
             break;
           default:
             System.out.println("Deu merda mesmo!");
@@ -216,23 +238,46 @@ class VirtualMachine{
   private void nextPc(){
     this.pc++;
   }
+  private void setInstructionCounter(int x){
+    this.instructionCounter = x;
+  }
+  private int getInstructionCounter(){
+    return this.instructionCounter;
+  }
+  private void addInstructionCount(){
+    this.instructionCounter++;
+  }
+  private void makeSysCall(String sysCallCode, String sysCallArg){
+    setInstructionCounter(0);
+    this.myState = MachineStates.valueOf("CALLING");
+    SystemRequest newReq = new SystemRequest(sysCallCode,sysCallArg,serialNumber);
+    Battlefield.systemCall(newReq);
+    this.myState = MachineStates.valueOf("WAITING");
+  }
 
-  void runCode(){
-    for(setPC(0); getPC() < programArray.size();){
+  public int runCode(){
+    this.myState = MachineStates.valueOf("RUNING");
+    while(this.myState.toString().compareTo("RUNING") == 0){
       makeOperation(getPC());
       nextPc();
+      addInstructionCount();
+      if(getInstructionCounter() == MAX_IC){
+        makeSysCall("None","None");
+      }
+      if (programArray.get(getPC())[0].compareTo("END") == 0){return -1;}
     }
+    return 1;
   }
 
-  public static void main(String[] argv) throws IOException{
-    VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
-    String name = argv[0];
-    filter.parseToMe(vm.program(), vm.hashlables(), name);
-    // vm.showProgram();
-    // System.out.println("---------");
-    //vm.showHash();
-    // System.out.println("-----xxxxs----");
-    vm.runCode();
-  }
+  // public static void main(String[] argv) throws IOException{
+  //   VirtualMachine vm = new VirtualMachine(); /*inicializa a VM*/
+  //   String name = argv[0];
+  //   filter.parseToMe(vm.program(), vm.hashlables(), name);
+  //   // vm.showProgram();
+  //   // System.out.println("---------");
+  //   //vm.showHash();
+  //   // System.out.println("-----xxxxs----");
+  //   vm.runCode();
+  // }
   
 }

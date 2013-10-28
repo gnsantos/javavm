@@ -3,12 +3,18 @@ import java.util.*;
 import java.lang.*;
 
 public class SystemRequest{
-	public static void makeRequest(String opCode, String arg){
-		System.out.println("Commando : " +opCode +"\nArgument : " +arg);
-		foo();
+	private String instructionRequest;
+	private String instructionArgument;
+	private int serialNumberRequester;
+	public SystemRequest(String opCode, String arg,int serialNumber){
+		this.instructionRequest = opCode;
+		this.instructionArgument = arg;
+		this.serialNumberRequester = serialNumber;
 	}
 
-	private static void foo(){
-		System.out.println("Enjoy the foo");
+	public void showRequest(){
+		System.out.println("Opcode : " +this.instructionRequest);
+		System.out.println("Argument : " +this.instructionArgument);
+		System.out.println("Serial : " +this.serialNumberRequester);
 	}
 }

@@ -12,7 +12,7 @@ public class Parser{
 	    Pattern comline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)?(\\b[a-zA-Z]{2,4}\\b)[^:]?((-?\\d+\\.?\\d*|[^#]*|\\s*))\\s*[\n\f#]*");
 	    Pattern labeline = Pattern.compile("(\\b[a-zA-Z]*\\b:\\s*)[\n\f#]*$");
 	    Pattern other = Pattern.compile("^#.*[\n\f]*|^[ \t\n]*$");
-	    
+	    DebugJav.sayCrash("At Parser.java");
 	    while((line = file.readLine()) != null){
 	      Matcher matchLabel = labeline.matcher(line);
 	      Matcher matchComLine = comline.matcher(line);
