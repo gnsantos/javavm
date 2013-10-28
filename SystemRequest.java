@@ -13,7 +13,7 @@ public class SystemRequest{
 	}
 
 	public void showRequest(){
-		System.out.println("Opcode : " +this.instructionRequest);
+		System.out.println(" Opcode : " +this.instructionRequest);
 		System.out.println("Argument : " +this.instructionArgument);
 		System.out.println("Serial : " +this.serialNumberRequester);
 	}

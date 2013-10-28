@@ -50,7 +50,7 @@ public class Battlefield{
     
     public static void main (String argv[]) throws IOException {
         matrix = new MatrixHexa(map);
-        DebugJav.sayCrash("Battlefield 53");
+        DebugJav.sayCrash("Battlefield 53x");
         initArena(map.length, map[0].length);
         initScreen(map.length, map[0].length, map);
         codeName = argv[0];

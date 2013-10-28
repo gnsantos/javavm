@@ -262,7 +262,7 @@ class VirtualMachine{
       nextPc();
       addInstructionCount();
       if(getInstructionCounter() == MAX_IC){
-        makeSysCall("None","None");
+        makeSysCall("None","None ");
       }
       if (programArray.get(getPC())[0].compareTo("END") == 0){return -1;}
     }

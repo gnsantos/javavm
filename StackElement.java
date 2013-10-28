@@ -70,7 +70,7 @@ Pilha
 			System.out.println("-----------");
 		}
 		if(stackTeste.size() == 0){
-			System.out.println("Empty Stack!");
+			System.out.println("Empty Stack! ");
 		}
 		//System.out.println("------------------------------$$");
 

@@ -19,7 +19,7 @@ public class BattleRobot implements Robot{
 	}
 	public int runVM(){
 		if(this.vm.runCode() == -1){ return 0; }
-		else{ return 1; }
+		else{return 1; }
 	}
 
 	public String sayName(){
