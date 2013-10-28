@@ -1,2 +1,35 @@
 Arena
-    A classe Arena é a classe que vai gerenciar os outros aspectos do programa
+
+    A classe Arena é a classe que vai gerenciar outros aspectos do programa, principalmente a parte de output.
+    
+Atributos
+
+    Um dos atributos principais da classe é o map, que é essencialmente um mapa do campo. Ele é uma matriz de chars, com cada char representanto um hexágono do terreno; a partir desses chars é que desesnhamos o mapa. Os chars são determinados a partir de "defines" no começo do código, e a criação da matrz é feita de forma relativamente gráfica no começo do main, para permitir uma fácil edição de qualquer aspecto do mapa (e até a futura criação de outros mapas).
+    
+    O map é usado principalmente na criação da MatrixHexa. Essa matrix é essencialmente uma matriz de Terrains, que são chars também. Ela tem basicamente a mesma informação da map, mas como é um objeto ela permite futuras sofisticações de terrenos ou do mapa que nós queiramos fazer.
+    
+    A arena é uma matriz do mesmo tamanho do mapa, mas usada para controlar as posições das entidades do jogo, principalmente para facilitar o output. Ela é uma matriz e Entity's, que no momento podem ser robôs ou cristais, dependendo do char type dela. Dessa forma, basta varrer essa matriz para saber onde devemos imprimir robôs ou cristais.
+    
+    Finalmente, temos a matriz screen. Essa matriz contém literalmente o que vamos mostrar na tela, então é bem maior do que as outras; cada char dela será impresso no output. Esse é um sistema bem simples, pois é apenas um modo de visualizar a situação do jogo enquanto não criamos o output gráfico de verdade.
+    
+Métodos
+
+    A classe tem poucos métodos, que são o main, dois inicializadores e um método para imprimir a tela.
+    
+    O main é bem simples. Ele começa inicializando o map, de forma que fica fácil fazer qualquer mudança no terreno, desde o seu tamanho até de cada hexágono que o compõe. Depois disso, criamos a MatrixHexa a partir desse mapa e chamamos os dois inicializadores, para então imprimirmos tudo na tela.
+    
+    initArena é o método que inicializa a Arena, a matriz de Entity's. Ele basicamente cria a matriz, popula ela com espaços em branco e depois insere robôs e cristais aleatoriamente pelo campo.
+    
+    initScreen já é mais complexo, pois envolve desenhar os hexágonos. A orientação dos hexágonos foi escolhida de modo a tornar melhor a representação deles em caracteres. Inicialmente, método determina o tamanho da tela a ser impressa e cria a matriz, e então popula ela com espaços em branco. Em seguida, coloca os limites do mapa, ou seja, os hexágonos que são apenas parcialmente impressos no canto da tela e servem só para fins estéticos.
+    Em seguida, imprimimos os contornos dos hexágonos, para poder facilmente distinguir entre uma célula e outra. Retiramos os pequenos traços que ficariam soltos nos cantos superior esquerdo e inferior direito e então preenchemos os terrenos, com base na MatrxHexa.
+    Com a base do mapa já criada, resta apenas desenhar os robôs e os cristais. Para isso simplesmente percorremos a Arena, e a cada robô ou cristal encontrado desenhamos ele na célula certa. Os robôs são da forma
+    
+            0
+           /H\
+           / \
+           
+        enquanto os cristais são apenas asteriscos '*'.
+        
+    Com tudo pronto, basta apenas imprimir a tela, o que se torna muito fácil com a matrix screen. O método printArena apenas percorre screen, imprimindo cada caracter encontrado e quebrando a linha conforme necessário.
+    
+    Esse modo de fazer o output torna fácil, se necessário, a animação do jogo, porque basta atualizar o mapa e a arena como desejado, chamar novamente initScreen e printArena e temos uma nova tela impressa.
