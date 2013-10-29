@@ -256,7 +256,6 @@ class VirtualMachine{
   }
 
   public int runCode(){
-    DebugJav.sayCrash("mmmm");
     this.myState = MachineStates.valueOf("RUNNING");
     while(this.myState.toString().compareTo("RUNNING") == 0){
       makeOperation(getPC());

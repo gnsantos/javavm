@@ -18,7 +18,7 @@ public class Battlefield{
     
     private static final char BOUNDS = T;
     
-    private static final int NUM_ROBOTS = 2;
+    private static final int NUM_ROBOTS = 4;
     private static final int NUM_CRYSTALS = 10;
     
     
@@ -45,45 +45,53 @@ public class Battlefield{
     private static Vector<BattleRobot> army = new Vector<BattleRobot>(NUM_ROBOTS);
     private static int serialMachine;
     private static Queue<SystemRequest> requestQueue = new LinkedList<SystemRequest>();
-    public static String codeName;
+    public static String codeNameA;
+    public static String codeNameB;
   
     
     public static void main (String argv[]) throws IOException {
         matrix = new MatrixHexa(map);
-        codeName = argv[0];
+        codeNameA = argv[0];
+        codeNameB = argv[1];
         initArena(map.length, map[0].length);
         initScreen(map.length, map[0].length, map);
-        //tellMeAboutTheWar();
+        tellMeAboutTheWar();
         // printArena();
         runtheGame();
  }
     public static void runtheGame(){
-        while(army.get(0).runVM() ==  1){
-            if(requestQueue.size() != 0 ){  requestQueue.poll().showRequest();    }
+        for(int x = 0; x < NUM_ROBOTS;){
+            if(requestQueue.size() == 4 ){  queueProcessing(); }
+            if(army.get(x).runVM() !=  1){x++;}
         }
+        if(requestQueue.size() > 0){ queueProcessing();}
     }
 
+    public static void queueProcessing(){
+        System.out.println("\nNew Queue" );
+        while(requestQueue.size() != 0){
+            System.out.println("Making a request");
+            requestQueue.poll().showRequest();
+            System.out.println();
+        }
+        System.out.println("\n-------------------------------------\n");
+    }
 
     public static void tellMeAboutTheWar(){
   for (int x = 0; x < NUM_ROBOTS ; x++) {
          System.out.println("Name : " + army.get(x).sayName() 
-    +"\nSerial Number : " +army.get(x).saySerialNumber());
+                            +"\nSerial Number : " +army.get(x).saySerialNumber());
          System.out.println("Team : " + army.get(x).getTeam());
          System.out.print("Position : ");
          army.get(x).showCoordinates();
          System.out.println();
-         // if(army.get(x).positionScanner(4,8)){
-         //  System.out.println("Im HERE!");
-         // }
-         // else{System.out.println("NOT HERE!");}
   }
  }
     public static void systemCall(SystemRequest request){
         requestQueue.add(request);
     }
- public static void insertArmy(int index, String team, String robotModel, int x, int y, int serialNumber) throws IOException{
-        DebugJav.sayCrash("86");
-        army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber,codeName));
+ public static void insertArmy(String sourceCode,int index, String team, String robotModel, int x, int y, int serialNumber) throws IOException{
+        army.add(index, new BattleRobot(robotModel+"-" + serialNumber, serialNumber,sourceCode));
         army.get(index).setTeam("Team "+team);
         army.get(index).moveRobot(x,y);
  }
@@ -110,10 +118,10 @@ public class Battlefield{
             j = gen.nextInt(mapWidth);
             arena[i][j] = new Entity(ROBOT, i, j);
             if (k < NUM_ROBOTS/2){
-             insertArmy(k,"A","TX",i,j,gen.nextInt(1000));
+                insertArmy(codeNameA,k,"A","TX",i,j,gen.nextInt(1000));
             }
             else{
-    insertArmy(k,"B","ZT",i,j,gen.nextInt(1000));
+                insertArmy(codeNameB,k,"B","ZT",i,j,gen.nextInt(1000));
             }
             // System.out.println("Robo #"+k + "\n("+i+","+j+")");
             // System.out.println();
